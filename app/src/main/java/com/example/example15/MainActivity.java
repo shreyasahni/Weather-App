@@ -60,21 +60,35 @@ public class MainActivity extends AppCompatActivity {
             //Log.i("JSON", s);
             try {
                 JSONObject jsonObject = new JSONObject(s);
-                JSONObject part;
+                JSONObject part, part2;
                 String displayInfo = "", main, description;
+                double temp, humidity;
+                temp = humidity = -1;
                 String weatherInfo = jsonObject.getString("weather");       //enter key from JSON data exactly - maintain case
+                String weatherInfo2 = jsonObject.getString("main");       //enter key from JSON data exactly - maintain case
                 JSONArray jsonArray = new JSONArray(weatherInfo);       //splitting string into array elements
+                JSONObject jsonObject2 = new JSONObject(weatherInfo2);       //splitting string into array elements
                 for(int i=0; i<jsonArray.length(); i++) {
                     part = jsonArray.getJSONObject(i);      //getting array element
                     main = part.getString("main");      //JSON key
                     description = part.getString("description");        //JSON key
                     if(!main.isEmpty() && !description.isEmpty()) {
-                        displayInfo += main + ": " + description + "\n";        //appending to msg
+                        //displayInfo += main + ": " + description + "\n";        //appending to msg
+                        displayInfo += description + ", ";
                     }
                     //Log.i("Info", part.getString("main"));
                     //Log.i("Info", part.getString("description"));
                 }
-                //Log.i("Info", weatherInfo);
+                displayInfo = displayInfo.substring(0, 1).toUpperCase() + displayInfo.substring(1, displayInfo.length()-2) + "\n\n";
+                temp = jsonObject2.getDouble("temp");      //JSON key
+                humidity = jsonObject2.getDouble("humidity");      //JSON key
+                if(temp != -1 && humidity != -1) {
+                   displayInfo += "Temperature: " + Double.toString(temp) + " C\nHumidity: " + Double.toString(humidity) + "%\n";        //appending to msg
+                }
+                //Log.i("Info", String.valueOf(jsonObject2.getDouble("temp")));
+                //Log.i("Info", String.valueOf(jsonObject2.getDouble("humidity")));
+
+                //Log.i("Info", weatherInfo2);
                 if(!displayInfo.isEmpty()) {
                     weatherText.setText(displayInfo);
                 }
